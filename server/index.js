@@ -1,10 +1,9 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-const { errorHandler, notFound } = require("./middleware/errorMiddleware");
+const { errorHandler, notFound } = require("./middlewares/errorMiddleware");
 
 const connectDB = require("./config/db");
 
@@ -23,8 +22,8 @@ connectDB();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.json()); // Parse JSON request bodies
+app.use(cors()); // Enable CORS for all routes
 
 try {
   app.get("/", (req, res) => {
@@ -48,5 +47,3 @@ try {
   console.error("Error starting server:", error);
   process.exit(1); // Exit the process with failure
 }
-
-//

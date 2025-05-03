@@ -10,7 +10,7 @@ const {
 } = require("../controllers/taskController");
 
 // Middleware to protect routes
-const protect = require("../middleware/authMiddleware");
+const protect = require("../middlewares/authMiddleware");
 
 // Create a new router instance
 const router = express.Router();
