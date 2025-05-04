@@ -7,7 +7,18 @@ export const fetchTasks = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/tasks`, { params: { userId } });
-      console.log("response from API: ", response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const fetchTaskById = createAsyncThunk(
+  'tasks/fetchTaskById',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/tasks/${id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -110,20 +121,60 @@ const taskSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
+      // Fetch task by ID
+      .addCase(fetchTaskById.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchTaskById.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const index = state.tasks.findIndex(task => task.id === action.payload.id);
+        if (index !== -1) {
+          state.tasks[index] = action.payload;
+        } else {
+          state.tasks.push(action.payload);
+        }
+      })
+      .addCase(fetchTaskById.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
       // Add task
+      .addCase(addTask.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(addTask.fulfilled, (state, action) => {
         state.tasks.push(action.payload);
+        state.status = 'succeeded';
+      })
+      .addCase(addTask.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       })
       // Update task
+      .addCase(updateTask.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(updateTask.fulfilled, (state, action) => {
         const index = state.tasks.findIndex(task => task.id === action.payload.id);
         if (index !== -1) {
           state.tasks[index] = action.payload;
         }
+        state.status = 'succeeded';
+      })
+      .addCase(updateTask.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       })
       // Delete task
+      .addCase(deleteTask.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.tasks = state.tasks.filter(task => task.id !== action.payload);
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   }
 });
@@ -138,11 +189,6 @@ export const {
   resetFilters,
   markAsCompleted
 } = taskSlice.actions;
-
-// Selectors
-export const selectAllTasks = state => state.tasks.tasks;
-export const selectTaskById = (state, taskId) => 
-  state.tasks.tasks.find(task => task.id === taskId);
 
 export const selectFilteredTasks = state => {
   const { tasks, filters, sort } = state.tasks;

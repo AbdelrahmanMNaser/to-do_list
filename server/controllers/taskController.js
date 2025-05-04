@@ -36,8 +36,8 @@ const getTaskById = async (req, res) => {
 
 // @desc   Create a new task
 const createTask = async (req, res) => {
-  const { title, description, status, userId } = req.body;
-  const task = new Task({ title, description, status, userId });
+  const { title, description, dueDate, user } = req.body;
+  const task = new Task({ title, description, dueDate, user });
   try {
     const newTask = await task.save();
     res.status(201).json(newTask);
@@ -50,35 +50,18 @@ const createTask = async (req, res) => {
 
 // @desc   Update task by ID
 const updateTask = async (req, res) => {
-  const { title, description, status } = req.body;
+  const { title, description, dueDate, status, completedAt } = req.body;
   try {
     const task = await Task.findByIdAndUpdate(req.params.id, {
       title,
       description,
+      dueDate,
+      status,
+      completedAt,
     }).populate({
       path: "user",
       select: "name email",
     });
-
-    if (!task) {
-      return res.status(404).json({ message: "Task not found" });
-    }
-
-    res.status(200).json(task);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-// @desc   Update task status by ID
-const updateTaskStatus = async (req, res) => {
-  const { status } = req.body;
-  try {
-    const task = await Task.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true }
-    ).populate("userId", "name email");
 
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
@@ -96,7 +79,6 @@ const updateTaskStatus = async (req, res) => {
 const deleteTask = async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id).populate(
-      "userId",
       "name email"
     );
     if (!task) {
@@ -115,6 +97,5 @@ module.exports = {
   getTaskById,
   createTask,
   updateTask,
-  updateTaskStatus,
   deleteTask,
 };

@@ -5,7 +5,6 @@ const {
   getTaskById,
   createTask,
   updateTask,
-  updateTaskStatus,
   deleteTask,
 } = require("../controllers/taskController");
 
@@ -26,8 +25,7 @@ router.get("/", getAllTasks);
 router.get("/:id", getTaskById);
 
 // PUT APIs
-router.put("/:id", updateTask);
-router.put("/:id", updateTaskStatus);
+router.patch("/:id", updateTask);
 
 // DELETE APIs
 router.delete("/:id", deleteTask);
