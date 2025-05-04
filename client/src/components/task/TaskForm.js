@@ -64,37 +64,32 @@ const TaskForm = ({ user = null, task = null, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validate()) return;
-
-            // …inside handleSubmit…
-        // Prepare payload
-        const isoDueDate = new Date(formData.dueDate).toISOString();
-
-        console.log("ISO Due Date:", isoDueDate); // Debugging line
-
-
-        const userId = task?.user || user._id || user.id;
-      
-        const payload = {
-          ...formData,
-          dueDate: isoDueDate,
-          user: userId
-        };
-      
-        try {
-          if (task) {
-            await dispatch(
-              updateTask({ id: task._id, updates: payload })
-            ).unwrap();
-          } else {
-            console.log("Creating new task with payload:", payload);
-            
-            await dispatch(addTask(payload));
-          }
-          onClose();
-        } catch (error) {
-        
+  
+    // Prepare payload
+    const isoDueDate = new Date(formData.dueDate).toISOString();
+    const userId = task?.user || user._id || user.id;
+    
+    const payload = {
+      ...formData,
+      dueDate: isoDueDate,
+      user: userId
+    };
+    
+    try {
+      if (task) {
+        // For updating existing task
+        await dispatch(updateTask({ 
+          id: task._id, 
+          updates: payload 
+        })).unwrap();
+      } else {
+        // For creating new task
+        await dispatch(addTask(payload)).unwrap();
+      }
+      onClose();
+    } catch (error) {
       console.error("Task submission error:", error);
       setErrors((prev) => ({
         ...prev,

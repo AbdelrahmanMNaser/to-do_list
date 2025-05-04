@@ -28,29 +28,36 @@ const TaskCard = ({ task, onEdit }) => {
 
   // Handle status toggle (complete/incomplete)
   const handleToggleStatus = async (e) => {
-    // Stop propagation to prevent navigation when toggling status
+    e.stopPropagation(); // Add this to prevent navigation
     
     const newStatus = task.status === "completed" ? "pending" : "completed";
-    await dispatch(
-      updateTask({
-        id: task._id,
-        updates: {
-          status: newStatus,
-          completedAt: newStatus === "completed" ? new Date() : null,
-        },
-      })
-    );
+    try {
+      await dispatch(
+        updateTask({
+          id: task._id,
+          updates: {
+            status: newStatus,
+            completedAt: newStatus === "completed" ? new Date() : null,
+          },
+        })
+      ).unwrap(); // Use unwrap to properly handle the Promise
+    } catch (error) {
+      console.error("Failed to update task status:", error);
+    }
   };
-
-  // Handle delete task
-  const handleDelete = (e) => {
+  
+  // Improve handleDelete function
+  const handleDelete = async (e) => {
     e.stopPropagation();
     
     if (window.confirm("Are you sure you want to delete this task?")) {
-      dispatch(deleteTask(task._id));
+      try {
+        await dispatch(deleteTask(task._id)).unwrap();
+      } catch (error) {
+        console.error("Failed to delete task:", error);
+      }
     }
   };
-
   // Create a URL-friendly slug from the title
   const createSlug = (title) => {
     // Store task ID in the slug to fetch data later

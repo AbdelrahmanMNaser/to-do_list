@@ -6,7 +6,7 @@ export const fetchTasks = createAsyncThunk(
   'tasks/fetchTasks',
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/tasks`, { params: { userId } });
+      const response = await axiosInstance.get(`/tasks/`, { params: { userId } });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -183,7 +183,7 @@ const taskSlice = createSlice({
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.loading = false;
-        state.tasks = state.tasks.filter(task => task.id !== action.payload);
+        state.tasks = state.tasks.filter(task => task._id !== action.payload);
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.status = 'failed';
