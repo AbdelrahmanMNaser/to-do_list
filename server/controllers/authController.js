@@ -36,11 +36,13 @@ const registerUser = async (req, res) => {
     const newUser = new User({ username, password, email });
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully" });
 
     // Generate a token for the user
     const token = generateToken(newUser._id);
+
+    // Send response with user details and token
     res.status(201).json({
+      message: "User registered successfully",
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
@@ -65,7 +67,7 @@ const loginUser = async (req, res) => {
 
     // Check if password matches
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
+        if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
