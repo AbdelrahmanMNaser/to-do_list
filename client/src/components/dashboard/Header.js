@@ -1,21 +1,34 @@
-import React from 'react';
+import React from "react";
+import { FaCalendarAlt } from "react-icons/fa";
 
 const Header = ({ username }) => {
   return (
-    <header className="bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg">
-      <div className="container mx-auto px-4 py-6">
+    <header className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-white">TaskMaster</h1>
-            <p className="text-blue-100 mt-1">Organize your tasks efficiently</p>
+          <div className="flex items-center space-x-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+              <p className="text-sm text-gray-500">
+                Welcome back,
+                <span className="font-medium text-indigo-600 ml-1">
+                  {username || "User"}
+                </span>
+              </p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-white text-lg">
-              Welcome, <span className="font-semibold">{username || 'User'}</span>!
-            </p>
-            <p className="text-blue-100 text-sm mt-1">
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-            </p>
+
+          <div className="flex items-center space-x-6">
+            <FaCalendarAlt className="text-gray-500" />
+            <div className="text-right">
+              <p className="text-sm font-medium text-gray-500">
+                {new Date().toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
           </div>
         </div>
       </div>
