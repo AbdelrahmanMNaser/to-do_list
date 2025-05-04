@@ -1,70 +1,124 @@
-# Getting Started with Create React App
+# TaskMaster - To-Do List Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack to-do list application built with MERN stack. This application offers task management features with interactive dashboards, task filtering, and user authentication. It follows MVC architecture and is designed to be responsive and user-friendly.
 
-## Available Scripts
 
-In the project directory, you can run:
+## Table of Contents
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  - [1. Clone the repository](#1-clone-the-repository)
+  - [2. Set up the backend](#2-set-up-the-backend)
+  - [3. Set up the frontend](#3-set-up-the-frontend)
+- [Running the Application](#running-the-application)
+- [1. Start the backend server](#1-start-the-backend-server)
+- [2. Start the frontend application](#2-start-the-frontend-application)
+- [License](#license)
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **User Authentication**: Register and login functionality
+- **Dashboard**: Overview of task statistics with charts
+- **Task Management**:
+  - Create, read, update, and delete tasks
+  - Filter tasks by status
+  - Search tasks by title
+  - View task details
+- **User Profile**: Update user information and change password
+- **Responsive Design**: Mobile-friendly UI using Tailwind CSS
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Tech Stack
 
-### `npm test`
+### Frontend
+- React
+- Redux Toolkit for state management
+- React Router for navigation
+- Tailwind CSS for styling
+- Axios for API requests
+- Plotly.js for charts and visualizations
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Backend
+- Node.js
+- Express
+- MongoDB with Mongoose
+- JWT for authentication
+- bcrypt for password hashing
 
-### `npm run build`
+## Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [MongoDB](https://www.mongodb.com/try/download/community) (local instance or MongoDB Atlas)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 1. Clone the repository
+```bash
+git clone <repository-url>
+cd to-do_list
+```
 
-### `npm run eject`
+### 2. Set up the backend
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+cd server
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Install dependencies
+npm install
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# Create a .env file
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Create a .env file in the server directory with the following content:
+```
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/to-do_db
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRATION=30d
+```
 
-## Learn More
+> Note: For production, use a strong random string for JWT_SECRET
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 3. Set up the frontend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+cd ../client
 
-### Code Splitting
+# Install dependencies
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# Create a .env file
+```
 
-### Analyzing the Bundle Size
+Create a .env file in the client directory with the following content:
+```
+REACT_APP_API_URL=http://localhost:5000
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Running the Application
 
-### Making a Progressive Web App
+### 1. Start the backend server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+cd server
+npm run dev
+```
 
-### Advanced Configuration
+The server will start on port 5000 by default.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 2. Start the frontend application
 
-### Deployment
+```bash
+cd client
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The React application will start on port 3000 and should automatically open in your browser.
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.
