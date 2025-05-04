@@ -1,9 +1,8 @@
-const getBarChartData = (  tasks, timeRange) => {
+const getBarChartData = (tasks, timeRange) => {
   // Calculate date ranges based on selected timeRange
   const endDate = new Date();
   let startDate = new Date();
   let interval = "day";
-  let format = "%b %d";
 
   switch (timeRange) {
     case "7days":
@@ -15,78 +14,78 @@ const getBarChartData = (  tasks, timeRange) => {
     case "3months":
       startDate.setMonth(endDate.getMonth() - 3);
       interval = "week";
-      format = "%b %d";
       break;
     case "year":
       startDate.setFullYear(endDate.getFullYear() - 1);
       interval = "month";
-      format = "%b %Y";
       break;
     default:
       startDate.setDate(endDate.getDate() - 30);
   }
 
-  // Calculate actual data from tasks array
+  // Initialize arrays for date labels and data
   const dateLabels = [];
   const completedData = [];
-  const pendingData = [];
+  const createdData = [];
 
-  // Generate date labels based on time range
+  // Generate date points based on time range
   const currentDate = new Date(startDate);
 
   while (currentDate <= endDate) {
     let nextDate = new Date(currentDate);
 
     if (interval === "day") {
+      // Format date as MM/DD/YYYY for better readability
       dateLabels.push(currentDate.toLocaleDateString());
 
-      // Count tasks by DUE DATE for this day
-      const dayCompleted = tasks.filter(
-        (task) =>
-          task.status === "completed" &&
-          new Date(task.dueDate).toDateString() === currentDate.toDateString()
+      // Count tasks CREATED on this day
+      const dayCreated = tasks.filter(
+        (task) => {
+          const createdDate = new Date(task.createdAt);
+          return createdDate.toDateString() === currentDate.toDateString();
+        }
       ).length;
 
-      const dayPending = tasks.filter(
-        (task) =>
-          task.status === "pending" &&
-          new Date(task.dueDate).toDateString() === currentDate.toDateString()
+      // Count tasks COMPLETED on this day
+      const dayCompleted = tasks.filter(
+        (task) => {
+          if (!task.completedAt) return false;
+          const completedDate = new Date(task.completedAt);
+          return completedDate.toDateString() === currentDate.toDateString();
+        }
       ).length;
 
       completedData.push(dayCompleted);
-      pendingData.push(dayPending);
+      createdData.push(dayCreated);
 
       currentDate.setDate(currentDate.getDate() + 1);
     } else if (interval === "week") {
       nextDate.setDate(currentDate.getDate() + 6);
+      
+      // Format date range as "Start - End" for weeks
       dateLabels.push(
-        `${currentDate.toLocaleDateString()} - ${nextDate.toLocaleDateString()}`
+        `${currentDate.getMonth()+1}/${currentDate.getDate()} - ${nextDate.getMonth()+1}/${nextDate.getDate()}`
       );
 
-      // Count tasks for this week
-      const weekCompleted = tasks.filter((task) => {
-        const dueDate = new Date(task.dueDate);
-        return (
-          task.status === "completed" &&
-          dueDate >= currentDate &&
-          dueDate <= nextDate
-        );
+      // Count tasks CREATED in this week
+      const weekCreated = tasks.filter((task) => {
+        const createdDate = new Date(task.createdAt);
+        return createdDate >= currentDate && createdDate <= nextDate;
       }).length;
 
-      const weekPending = tasks.filter((task) => {
-        const dueDate = new Date(task.dueDate);
-        return (
-          task.status === "pending" &&
-          dueDate >= currentDate &&
-          dueDate <= nextDate
-        );
+      // Count tasks COMPLETED in this week
+      const weekCompleted = tasks.filter((task) => {
+        if (!task.completedAt) return false;
+        const completedDate = new Date(task.completedAt);
+        return completedDate >= currentDate && completedDate <= nextDate;
       }).length;
 
       completedData.push(weekCompleted);
-      pendingData.push(weekPending);
+      createdData.push(weekCreated);
 
       currentDate.setDate(currentDate.getDate() + 7);
     } else if (interval === "month") {
+      // Format as "Month Year"
       dateLabels.push(
         currentDate.toLocaleDateString("default", {
           month: "short",
@@ -101,27 +100,27 @@ const getBarChartData = (  tasks, timeRange) => {
         0
       );
 
-      // Count tasks for this month by due date
-      const monthCompleted = tasks.filter((task) => {
-        const dueDate = new Date(task.dueDate);
+      // Count tasks CREATED in this month
+      const monthCreated = tasks.filter((task) => {
+        const createdDate = new Date(task.createdAt);
         return (
-          task.status === "completed" &&
-          dueDate.getMonth() === currentDate.getMonth() &&
-          dueDate.getFullYear() === currentDate.getFullYear()
+          createdDate.getMonth() === currentDate.getMonth() &&
+          createdDate.getFullYear() === currentDate.getFullYear()
         );
       }).length;
 
-      const monthPending = tasks.filter((task) => {
-        const dueDate = new Date(task.dueDate);
+      // Count tasks COMPLETED in this month
+      const monthCompleted = tasks.filter((task) => {
+        if (!task.completedAt) return false;
+        const completedDate = new Date(task.completedAt);
         return (
-          task.status === "pending" &&
-          dueDate.getMonth() === currentDate.getMonth() &&
-          dueDate.getFullYear() === currentDate.getFullYear()
+          completedDate.getMonth() === currentDate.getMonth() &&
+          completedDate.getFullYear() === currentDate.getFullYear()
         );
       }).length;
 
       completedData.push(monthCompleted);
-      pendingData.push(monthPending);
+      createdData.push(monthCreated);
 
       currentDate.setMonth(currentDate.getMonth() + 1);
     }
@@ -130,7 +129,7 @@ const getBarChartData = (  tasks, timeRange) => {
   return {
     dates: dateLabels,
     completed: completedData,
-    pending: pendingData,  // renamed from "created" for clarity
+    created: createdData,  // Return created tasks count (not pending)
   };
 };
 

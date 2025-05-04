@@ -133,13 +133,14 @@ const Dashboard = () => {
           timeRange={timeRange}
           onTimeRangeChange={setTimeRange}
         >
+          
           <Plot
             data={[
               {
                 type: "bar",
                 x: barData.dates,
                 y: barData.created,
-                name: "Pending",
+                name: "Created",  // Changed from "Pending" to "Created"
                 marker: { color: "#60A5FA" },
               },
               {

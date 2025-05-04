@@ -5,7 +5,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import TaskDetails from "./pages/TaskDetails";
-// import Profile from "./pages/Profile";
+import Profile from "./pages/Profile";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -22,7 +22,7 @@ const Routing = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/tasks/:slug" element={<TaskDetails />} />
-        {/*<Route path="/profile" element={<Profile />} /> */}
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Routes>
   );
